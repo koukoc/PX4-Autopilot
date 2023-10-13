@@ -3,6 +3,7 @@
 #include <px4_platform_common/log.h>
 
 #include <lib/mathlib/mathlib.h>
+#include "lib/slew_rate/SlewRate.hpp"
 
 float REFERENCE_MODEL_DAMPING{1.f};
 
@@ -10,9 +11,6 @@ FixedwingAttitudeReferenceModel::FixedwingAttitudeReferenceModel() :
 	ModuleParams(nullptr)
 {
 	parameters_update();
-
-	_roll_ref_model.setDiscretizationMethod(math::SecondOrderReferenceModel<float>::DiscretizationMethod::kForwardEuler);
-	_pitch_ref_model.setDiscretizationMethod(math::SecondOrderReferenceModel<float>::DiscretizationMethod::kForwardEuler);
 }
 
 void FixedwingAttitudeReferenceModel::update()

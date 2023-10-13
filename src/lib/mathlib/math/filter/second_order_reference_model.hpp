@@ -154,9 +154,6 @@ public:
 		// take a step forward from the last state (and input), update the filter states
 		integrateStates(time_step, last_state_sample_, last_rate_sample_);
 
-		// instantaneous acceleration from current input / state
-		filter_accel_ = calculateInstantaneousAcceleration(state_sample, rate_sample);
-
 		// store the current samples
 		last_state_sample_ = state_sample;
 		last_rate_sample_ = rate_sample;
@@ -178,7 +175,7 @@ public:
 		last_rate_sample_ = rate;
 	}
 
-private:
+protected:
 
 	// A conservative multiplier (>=2) on sample frequency to bound the maximum time step
 	static constexpr float kSampleRateMultiplier = 4.0f;
@@ -251,7 +248,7 @@ private:
 	 * @param[in] state_sample [units]
 	 * @param[in] rate_sample [units/s]
 	 */
-	void integrateStatesForwardEuler(const float time_step, const T &state_sample, const T &rate_sample)
+	virtual void integrateStatesForwardEuler(const float time_step, const T &state_sample, const T &rate_sample)
 	{
 		// general notation for what follows:
 		// c: continuous
@@ -282,6 +279,9 @@ private:
 
 		// discrete state transition
 		transitionStates(state_matrix, input_matrix, state_sample, rate_sample);
+
+		// instantaneous acceleration from current input / state
+		filter_accel_ = calculateInstantaneousAcceleration(state_sample, rate_sample);
 	}
 
 	/**
@@ -328,6 +328,9 @@ private:
 
 		// discrete state transition
 		transitionStates(state_matrix, input_matrix, state_sample, rate_sample);
+
+		// instantaneous acceleration from current input / state
+		filter_accel_ = calculateInstantaneousAcceleration(state_sample, rate_sample);
 	}
 
 	/**

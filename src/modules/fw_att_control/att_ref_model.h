@@ -41,6 +41,7 @@
 #include <px4_platform_common/module_params.h>
 
 #include <lib/mathlib/math/filter/second_order_reference_model.hpp>
+#include <lib/slew_rate/SlewRateYaw.hpp>
 
 #include <uORB/Publication.hpp>
 #include <uORB/Subscription.hpp>
@@ -49,6 +50,68 @@
 #include <uORB/topics/vehicle_attitude_setpoint.h>
 
 using namespace time_literals;
+
+template <class T>
+class AttitudeReferenceModel : public math::SecondOrderReferenceModel<float>
+{
+public:
+	AttitudeReferenceModel()
+	{
+		setDiscretizationMethod(math::SecondOrderReferenceModel<float>::DiscretizationMethod::kForwardEuler);
+	};
+
+	/**
+	 * Set the system parameters
+	 *
+	 * Calculates the damping coefficient, spring constant, and maximum allowed
+	 * time step based on the natural frequency.
+	 *
+	 * @param[in] natural_freq The desired undamped natural frequency of the system [rad/s]
+	 * @param[in] damping_ratio The desired damping ratio of the system
+	 * @param[in] jerk_limit set maximum jerk [unit/s^3]. Optional, only used in kForwardEuler mode
+	 * @return Whether or not the param set was successful
+	 */
+	bool setParameters(const float natural_freq, const float damping_ratio, float jerk_limit = INFINITY)
+	{
+		accel_slew_rate_.setSlewRate(jerk_limit * T{});
+
+		return math::SecondOrderReferenceModel<float>::setParameters(natural_freq, damping_ratio);
+	}
+
+	/**
+	 * Reset the system states
+	 *
+	 * @param[in] state Initial state [units]
+	 * @param[in] rate Initial rate, if provided, otherwise defaults to zero(s) [units/s]
+	 */
+	void reset(const T &state, const T &rate = T())
+	{
+		SecondOrderReferenceModel<float>::reset(state, rate);
+
+		accel_slew_rate_.setForcedValue(T());
+	}
+
+private:
+	SlewRate<T> accel_slew_rate_;
+
+	/**
+	 * Take one integration step using Euler-forward integration
+	 *
+	 * @param[in] time_step Integration time [s]
+	 * @param[in] state_sample [units]
+	 * @param[in] rate_sample [units/s]
+	 */
+	void integrateStatesForwardEuler(const float time_step, const T &state_sample, const T &rate_sample) override
+	{
+		accel_slew_rate_.update(calculateInstantaneousAcceleration(state_sample, rate_sample), time_step);
+		filter_accel_ = accel_slew_rate_.getState();
+		const T new_rate = filter_rate_ + filter_accel_ * time_step;
+		const T new_state = filter_state_ + filter_rate_ * time_step;
+
+		filter_state_ = new_state;
+		filter_rate_ = new_rate;
+	}
+};
 
 class FixedwingAttitudeReferenceModel : public ModuleParams
 {
@@ -77,8 +140,8 @@ private:
 	 */
 	void parameters_update();
 
-	math::SecondOrderReferenceModel<float> _roll_ref_model;  /*< Second order reference filter for the roll angle */
-	math::SecondOrderReferenceModel<float> _pitch_ref_model; /*< Second order reference filter for the pitch angle */
+	AttitudeReferenceModel<float> _roll_ref_model;  /*< Second order reference filter for the roll angle */
+	AttitudeReferenceModel<float> _pitch_ref_model; /*< Second order reference filter for the pitch angle */
 	bool _is_initialized{false}; /*< Flag indicating if the reference model is already initialized */
 	uint64_t _last_att_setpoint_timestamp{UINT64_C(0)}; /*< Timestamp of the last own published vehicle attitude setpoint topic */
 	hrt_abstime _last_update_timestamp{0U}; 	/*< Timestamp of the last update*/
