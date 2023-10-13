@@ -41,8 +41,12 @@
 
 #pragma once
 
+#include <float.h>
+#include <math.h>
+
 #include <px4_platform_common/defines.h>
-#include <matrix/SquareMatrix.hpp>
+
+#include "lib/matrix/matrix/math.hpp"
 
 namespace math
 {

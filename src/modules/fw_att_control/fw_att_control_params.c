@@ -254,3 +254,43 @@ PARAM_DEFINE_FLOAT(FW_MAN_R_MAX, 45.0f);
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_MAN_P_MAX, 30.0f);
+
+/**
+ * Natural frequency of the roll reference model
+ *
+ * Frequency of the critically damped second order roll reference model
+ *
+ * @min 0.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_R_FREQ, 5.0f);
+
+/**
+ * Enable roll reference model
+ *
+ *
+ * @boolean
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_INT32(FW_REF_R_EN, 0);
+
+/**
+ * Natural frequency of the roll reference model
+ *
+ * Frequency of the critically damped second order pitch reference model
+ *
+ * @min 0.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_P_FREQ, 5.0f);
+
+/**
+ * Enable pitch reference model
+ *
+ *
+ * @boolean
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_INT32(FW_REF_P_EN, 0);
