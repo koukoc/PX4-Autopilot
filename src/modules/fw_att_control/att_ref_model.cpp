@@ -132,7 +132,7 @@ void FixedwingAttitudeReferenceModel::parameters_update()
 		// this class attributes need updating (and do so).
 		updateParams();
 
-		_roll_ref_model.setParameters(_param_ref_r_freq.get(), REFERENCE_MODEL_DAMPING);
-		_pitch_ref_model.setParameters(_param_ref_p_freq.get(), REFERENCE_MODEL_DAMPING);
+		_roll_ref_model.setParameters(_param_ref_r_freq.get(), REFERENCE_MODEL_DAMPING, _param_ref_r_jerk_limit.get());
+		_pitch_ref_model.setParameters(_param_ref_p_freq.get(), REFERENCE_MODEL_DAMPING, _param_ref_p_jerk_limit.get());
 	}
 }

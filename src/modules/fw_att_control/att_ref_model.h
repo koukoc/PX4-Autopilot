@@ -51,7 +51,6 @@
 
 using namespace time_literals;
 
-template <class T>
 class AttitudeReferenceModel : public math::SecondOrderReferenceModel<float>
 {
 public:
@@ -73,7 +72,7 @@ public:
 	 */
 	bool setParameters(const float natural_freq, const float damping_ratio, float jerk_limit = INFINITY)
 	{
-		accel_slew_rate_.setSlewRate(jerk_limit * T{});
+		accel_slew_rate_.setSlewRate(jerk_limit);
 
 		return math::SecondOrderReferenceModel<float>::setParameters(natural_freq, damping_ratio);
 	}
@@ -84,15 +83,15 @@ public:
 	 * @param[in] state Initial state [units]
 	 * @param[in] rate Initial rate, if provided, otherwise defaults to zero(s) [units/s]
 	 */
-	void reset(const T &state, const T &rate = T())
+	void reset(const float &state, const float &rate = 0.f)
 	{
 		SecondOrderReferenceModel<float>::reset(state, rate);
 
-		accel_slew_rate_.setForcedValue(T());
+		accel_slew_rate_.setForcedValue(0.f);
 	}
 
 private:
-	SlewRate<T> accel_slew_rate_;
+	SlewRate<float> accel_slew_rate_;
 
 	/**
 	 * Take one integration step using Euler-forward integration
@@ -101,12 +100,12 @@ private:
 	 * @param[in] state_sample [units]
 	 * @param[in] rate_sample [units/s]
 	 */
-	void integrateStatesForwardEuler(const float time_step, const T &state_sample, const T &rate_sample) override
+	void integrateStatesForwardEuler(const float time_step, const float &state_sample, const float &rate_sample) override
 	{
 		accel_slew_rate_.update(calculateInstantaneousAcceleration(state_sample, rate_sample), time_step);
 		filter_accel_ = accel_slew_rate_.getState();
-		const T new_rate = filter_rate_ + filter_accel_ * time_step;
-		const T new_state = filter_state_ + filter_rate_ * time_step;
+		const float new_rate = filter_rate_ + filter_accel_ * time_step;
+		const float new_state = filter_state_ + filter_rate_ * time_step;
 
 		filter_state_ = new_state;
 		filter_rate_ = new_rate;
@@ -140,8 +139,8 @@ private:
 	 */
 	void parameters_update();
 
-	AttitudeReferenceModel<float> _roll_ref_model;  /*< Second order reference filter for the roll angle */
-	AttitudeReferenceModel<float> _pitch_ref_model; /*< Second order reference filter for the pitch angle */
+	AttitudeReferenceModel _roll_ref_model;  /*< Second order reference filter for the roll angle */
+	AttitudeReferenceModel _pitch_ref_model; /*< Second order reference filter for the pitch angle */
 	bool _is_initialized{false}; /*< Flag indicating if the reference model is already initialized */
 	uint64_t _last_att_setpoint_timestamp{UINT64_C(0)}; /*< Timestamp of the last own published vehicle attitude setpoint topic */
 	hrt_abstime _last_update_timestamp{0U}; 	/*< Timestamp of the last update*/
@@ -157,8 +156,10 @@ private:
 
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::FW_REF_R_FREQ>) _param_ref_r_freq,
+		(ParamFloat<px4::params::FW_REF_R_JERK>) _param_ref_r_jerk_limit,
 		(ParamBool<px4::params::FW_REF_R_EN>) _param_ref_r_en,
 		(ParamFloat<px4::params::FW_REF_P_FREQ>) _param_ref_p_freq,
+		(ParamFloat<px4::params::FW_REF_P_JERK>) _param_ref_p_jerk_limit,
 		(ParamBool<px4::params::FW_REF_P_EN>) _param_ref_p_en
 	)
 };

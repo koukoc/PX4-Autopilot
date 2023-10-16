@@ -270,7 +270,7 @@ PARAM_DEFINE_FLOAT(FW_YR_IMAX, 0.2f);
 PARAM_DEFINE_FLOAT(FW_RR_FF, 0.5f);
 
 /**
- * rall acceleration feedforward gain
+ * roll acceleration feedforward gain
  *
  * feedforward gain for acceleration to scale rad/s^2 to percentage output
  *

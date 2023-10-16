@@ -267,6 +267,15 @@ PARAM_DEFINE_FLOAT(FW_MAN_P_MAX, 30.0f);
 PARAM_DEFINE_FLOAT(FW_REF_R_FREQ, 5.0f);
 
 /**
+ * Roll reference model jerk limit
+ *
+ * @min 0.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_R_JERK, 5000.0);
+
+/**
  * Enable roll reference model
  *
  *
@@ -285,6 +294,15 @@ PARAM_DEFINE_INT32(FW_REF_R_EN, 0);
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_REF_P_FREQ, 5.0f);
+
+/**
+ * Pitch reference model jerk limit
+ *
+ * @min 0.0
+ * @decimal 3
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_REF_P_JERK, 5000.0);
 
 /**
  * Enable pitch reference model
