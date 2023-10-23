@@ -33,7 +33,6 @@
 
 add_subdirectory(launchdetection)
 add_subdirectory(runway_takeoff)
-add_subdirectory(performance_model)
 
 px4_add_module(
 	MODULE modules__fw_pos_control
