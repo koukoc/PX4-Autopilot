@@ -293,7 +293,7 @@ PARAM_DEFINE_FLOAT(FW_P_LIM_MIN, -45.0f);
  *
  * @unit deg
  * @min 0.0
- * @max 60.0
+ * @max 90.0
  * @decimal 1
  * @increment 0.5
  * @group FW L1 Control
@@ -306,7 +306,7 @@ PARAM_DEFINE_FLOAT(FW_P_LIM_MAX, 45.0f);
  * The maximum roll angle setpoint for autonomous modes including altitude and position control.
  *
  * @unit deg
- * @min 35.0
+ * @min 0.0
  * @max 65.0
  * @decimal 1
  * @increment 0.5
@@ -655,7 +655,7 @@ PARAM_DEFINE_FLOAT(FW_AIRSPD_STALL, 7.0f);
  *
  * @unit m/s
  * @min 1.0
- * @max 15.0
+ * @max 10000.0
  * @decimal 1
  * @increment 0.5
  * @group FW TECS
@@ -689,7 +689,7 @@ PARAM_DEFINE_FLOAT(FW_T_SINK_MIN, 2.0f);
  *
  * @unit m/s
  * @min 1.0
- * @max 15.0
+ * @max 500.0
  * @decimal 1
  * @increment 0.5
  * @group FW TECS

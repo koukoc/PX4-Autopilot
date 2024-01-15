@@ -160,6 +160,7 @@ set(models
 	iris_vision
 	nxp_cupcar
 	plane
+	rocket
 	plane_cam
 	plane_catapult
 	plane_lidar
