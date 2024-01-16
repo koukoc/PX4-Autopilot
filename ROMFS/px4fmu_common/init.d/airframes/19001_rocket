@@ -1,7 +1,16 @@
 #!/bin/sh
 #
-# @name Rocket SITL
+# @name Standard Rocket
 #
+# @type Standard Rocket
+# @class Rocket
+#
+# @output MAIN1 Roll
+# @output MAIN2 Pitch
+# @output MAIN4 Yaw
+#
+#
+
 
 . ${R}etc/init.d/rc.fw_defaults
 
@@ -72,6 +81,7 @@ param set-default PWM_MAIN_FUNC8 203
 param set-default PWM_MAIN_FUNC9 206
 param set-default PWM_MAIN_REV 256
 
+param set-default PWM_AUX_RATE 50
+param set-default PWM_MAIN_RATE 50
 
-set MIXER_FILE etc/mixers-sitl/plane_sitl.main.mix
-set MIXER custom
+set MIXER AETRFG
