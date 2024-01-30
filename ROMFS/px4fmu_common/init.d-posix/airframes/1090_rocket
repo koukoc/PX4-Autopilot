@@ -54,6 +54,7 @@ param set-default FW_T_SINK_MIN 1
 param set-default FW_W_EN 1
 
 param set-default RTL_DESCEND_ALT 100000
+param set-default RTL_RETURN_ALT 100000
 param set-default MIS_LTRMIN_ALT 30
 param set-default MIS_TAKEOFF_ALT 30
 
