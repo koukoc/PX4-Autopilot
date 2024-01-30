@@ -112,6 +112,9 @@ float ECL_YawController::control_bodyrate(const float dt, const ECL_ControlData 
 	/* Calculate body angular rate error */
 	_rate_error = _bodyrate_setpoint - ctl_data.body_z_rate;
 
+	_rate_setpoint =  _rate_error / _tc;
+
+
 	if (!ctl_data.lock_integrator && _k_i > 0.0f) {
 
 		/* Integral term scales with 1/IAS^2 */

@@ -55,8 +55,8 @@
  * needed.
  *
  * @unit s
- * @min 0.4
- * @max 1.0
+ * @min 0.0
+ * @max 50.0
  * @decimal 2
  * @increment 0.05
  * @group FW Attitude Control
@@ -73,10 +73,10 @@ PARAM_DEFINE_FLOAT(FW_R_TC, 0.4f);
  * needed.
  *
  * @unit s
- * @min 0.2
- * @max 1.0
- * @decimal 2
- * @increment 0.05
+ * @min 0.0
+ * @max 50.0
+ * @decimal 3
+ * @increment 0.005
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_P_TC, 0.4f);
@@ -89,7 +89,7 @@ PARAM_DEFINE_FLOAT(FW_P_TC, 0.4f);
  *
  * @unit %/rad/s
  * @min 0.005
- * @max 1.0
+ * @max 10.0
  * @decimal 3
  * @increment 0.005
  * @group FW Attitude Control
@@ -163,7 +163,7 @@ PARAM_DEFINE_FLOAT(FW_PR_IMAX, 0.4f);
  *
  * @unit %/rad/s
  * @min 0.005
- * @max 1.0
+ * @max 10.0
  * @decimal 3
  * @increment 0.005
  * @group FW Attitude Control
@@ -221,7 +221,7 @@ PARAM_DEFINE_FLOAT(FW_R_RMAX, 70.0f);
  *
  * @unit %/rad/s
  * @min 0.005
- * @max 1.0
+ * @max 10.0
  * @decimal 3
  * @increment 0.005
  * @group FW Attitude Control
@@ -236,9 +236,9 @@ PARAM_DEFINE_FLOAT(FW_YR_P, 0.05f);
  *
  * @unit %/rad
  * @min 0.0
- * @max 50.0
- * @decimal 1
- * @increment 0.5
+ * @max 1.0
+ * @decimal 3
+ * @increment 0.005
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_YR_I, 0.1f);
@@ -550,6 +550,24 @@ PARAM_DEFINE_INT32(FW_ARSP_SCALE_EN, 1);
  * @group FW Attitude Control
  */
 PARAM_DEFINE_FLOAT(FW_MAN_R_SC, 1.0f);
+
+/**
+ * Attitude Yaw Time Constant
+ *
+ * This defines the latency between a yaw step input and the achieved setpoint
+ * (inverse to a P gain). Half a second is a good start value and fits for
+ * most average systems. Smaller systems may require smaller values, but as
+ * this will wear out servos faster, the value should only be decreased as
+ * needed.
+ *
+ * @unit s
+ * @min 0.0
+ * @max 50.0
+ * @decimal 2
+ * @increment 0.05
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_FLOAT(FW_Y_TC, 0.4f);
 
 /**
  * Manual pitch scale

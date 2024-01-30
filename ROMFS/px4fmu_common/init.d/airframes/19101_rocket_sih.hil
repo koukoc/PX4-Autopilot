@@ -1,9 +1,21 @@
 #!/bin/sh
 #
-# @name Rocket SITLv1
+# @name SIH rocket AERT
+#
+# @type Simulation
+# @class Rocket
+#
+# @maintainer Romain Chiappinelli <romain.chiap@gmail.com>
+#
+# @board px4_fmu-v2 exclude
 #
 
 . ${R}etc/init.d/rc.fw_defaults
+
+set MIXER AERT
+set PWM_OUT 1234
+
+param set UAVCAN_ENABLE 0
 
 param set-default EKF2_MAG_ACCLIM 0
 param set-default EKF2_MAG_YAWLIM 0
@@ -63,15 +75,36 @@ param set-default CA_SV_CS3_TRQ_Y 1.0
 param set-default CA_SV_CS3_TYPE 4
 param set-default CA_SV_CS4_TYPE 9
 param set-default CA_SV_CS5_TYPE 10
-param set-default PWM_MAIN_FUNC3 204
-param set-default PWM_MAIN_FUNC4 205
-param set-default PWM_MAIN_FUNC5 101
-param set-default PWM_MAIN_FUNC6 201
-param set-default PWM_MAIN_FUNC7 202
-param set-default PWM_MAIN_FUNC8 203
-param set-default PWM_MAIN_FUNC9 206
-param set-default PWM_MAIN_REV 256
 
+param set-default HIL_ACT_REV 2
+param set-default HIL_ACT_FUNC1 201
+param set-default HIL_ACT_FUNC2 202
+param set-default HIL_ACT_FUNC3 203
+param set-default HIL_ACT_FUNC4 101
+param set-default HIL_ACT_FUNC5 204
+param set-default HIL_ACT_FUNC6 400
 
-set MIXER_FILE etc/mixers-sitl/plane_sitl.main.mix
-set MIXER custom
+# set SYS_HITL to 2 to start the SIH and avoid sensors startup
+param set-default SYS_HITL 2
+
+# disable some checks to allow to fly:
+# - with usb
+param set-default CBRK_USB_CHK 197848
+# - without real battery
+param set-default CBRK_SUPPLY_CHK 894281
+# - without safety switch
+param set-default COM_PREARM_MODE 0
+param set-default CBRK_IO_SAFETY 22027
+
+param set-default BAT_N_CELLS 3
+
+param set SIH_T_MAX 6.0
+param set SIH_MASS 0.3
+param set SIH_IXX 0.00402
+param set SIH_IYY 0.0144
+param set SIH_IZZ 0.0177
+param set SIH_IXZ 0.00046
+param set SIH_KDV 0.2
+
+param set SIH_VEHICLE_TYPE 1 	# sih as fixed wing
+param set RWTO_TKOFF 1  # enable takeoff from runway (as opposed to launched)
