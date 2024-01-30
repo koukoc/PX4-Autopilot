@@ -66,6 +66,22 @@ void ECL_L1_Pos_Controller::update_roll_setpoint()
 
 }
 
+void ECL_L1_Pos_Controller::update_yaw_setpoint()
+{
+	float yaw_new = atanf(_lateral_accel * 1.0f / CONSTANTS_ONE_G);
+	yaw_new = math::constrain(yaw_new, 0, _yaw_lim_rad);
+
+	if (_dt > 0.0f && _roll_slew_rate > 0.0f) {
+		// slew rate limiting active
+		yaw_new = math::constrain(yaw_new, _yaw_setpoint - _roll_slew_rate * _dt, _yaw_setpoint + _roll_slew_rate * _dt);
+	}
+
+	if (PX4_ISFINITE(roll_new)) {
+		_yaw_setpoint = yaw_new;
+	}
+
+}
+
 float ECL_L1_Pos_Controller::switch_distance(float wp_radius)
 {
 	/* following [2], switching on L1 distance */
@@ -209,6 +225,7 @@ ECL_L1_Pos_Controller::navigate_waypoints(const Vector2f &vector_A, const Vector
 	_bearing_error = eta;
 
 	update_roll_setpoint();
+	update_yaw_setpoint();
 }
 
 void
@@ -314,6 +331,7 @@ ECL_L1_Pos_Controller::navigate_loiter(const Vector2f &vector_A, const Vector2f 
 	}
 
 	update_roll_setpoint();
+	update_yaw_setpoint();
 }
 
 void ECL_L1_Pos_Controller::navigate_heading(float navigation_heading, float current_heading,
@@ -353,6 +371,7 @@ void ECL_L1_Pos_Controller::navigate_heading(float navigation_heading, float cur
 	_lateral_accel = 2.0f * sinf(eta) * omega_vel;
 
 	update_roll_setpoint();
+	update_yaw_setpoint();
 }
 
 void ECL_L1_Pos_Controller::navigate_level_flight(float current_heading)
@@ -372,6 +391,7 @@ void ECL_L1_Pos_Controller::navigate_level_flight(float current_heading)
 	_circle_mode = false;
 
 	update_roll_setpoint();
+	update_yaw_setpoint();
 }
 
 void ECL_L1_Pos_Controller::set_l1_period(float period)

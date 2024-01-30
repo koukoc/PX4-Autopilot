@@ -74,7 +74,7 @@ void ECL_Controller::reset_integrator()
 
 void ECL_Controller::set_time_constant(float time_constant)
 {
-	if (time_constant > 0.1f && time_constant < 3.0f) {
+	if (time_constant > 0.1f && time_constant < 10.0f) {
 		_tc = time_constant;
 	}
 }

@@ -106,6 +106,13 @@ public:
 	float get_roll_setpoint() { return _roll_setpoint; }
 
 	/**
+	 * Get yaw angle setpoint for fixed wing.
+	 *
+	 * @return Roll angle (in NED frame)
+	 */
+	float get_yaw_setpoint() { return _yaw_setpoint; }
+
+	/**
 	 * Get the current crosstrack error.
 	 *
 	 * @return Crosstrack error in meters.
@@ -227,6 +234,9 @@ private:
 	float _roll_slew_rate{0.0f};	///< roll angle setpoint slew rate limit in rad/s
 	float _dt{0};				///< control loop time in seconds
 
+	float _yaw_lim_rad{math::radians(360.0f)};  ///<maximum yaw angle in radians
+	float _yaw_setpoint{0.0f};	///< current yaw angle setpoint in radians
+
 	bool _has_guidance_updated =
 		false;	///< this flag is set to true by any of the guidance methods. This flag has to be manually reset using has_guidance_updated_reset()
 
@@ -235,6 +245,12 @@ private:
 	 *
 	 */
 	void update_roll_setpoint();
+
+	/**
+	 * Update yaw angle setpoint. This will also apply slew rate limits if set.
+	 *
+	 */
+	void update_yaw_setpoint();
 
 };
 

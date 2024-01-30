@@ -47,49 +47,19 @@ float ECL_YawController::control_attitude(const float dt, const ECL_ControlData 
 {
 	/* Do not calculate control signal with bad inputs */
 	if (!(PX4_ISFINITE(ctl_data.roll) &&
-	      PX4_ISFINITE(ctl_data.pitch) &&
-	      PX4_ISFINITE(ctl_data.roll_rate_setpoint) &&
-	      PX4_ISFINITE(ctl_data.pitch_rate_setpoint))) {
+	      PX4_ISFINITE(ctl_data.yaw) &&
+	      PX4_ISFINITE(ctl_data.roll_setpoint) &&
+	      PX4_ISFINITE(ctl_data.yaw_setpoint))) {
 
 		return _rate_setpoint;
 	}
 
-	float constrained_roll;
-	bool inverted = false;
+	/* Calculate the error */
+	float yaw_error = ctl_data.yaw_setpoint - ctl_data.yaw;
 
-	/* roll is used as feedforward term and inverted flight needs to be considered */
-	if (fabsf(ctl_data.roll) < math::radians(90.0f)) {
-		/* not inverted, but numerically still potentially close to infinity */
-		constrained_roll = math::constrain(ctl_data.roll, math::radians(-80.0f), math::radians(80.0f));
+	/*  Apply P controller: rate setpoint from current error and time constant */
+	_rate_setpoint = yaw_error / _tc;
 
-	} else {
-		inverted = true;
-
-		// inverted flight, constrain on the two extremes of -pi..+pi to avoid infinity
-		//note: the ranges are extended by 10 deg here to avoid numeric resolution effects
-		if (ctl_data.roll > 0.0f) {
-			/* right hemisphere */
-			constrained_roll = math::constrain(ctl_data.roll, math::radians(100.0f), math::radians(180.0f));
-
-		} else {
-			/* left hemisphere */
-			constrained_roll = math::constrain(ctl_data.roll, math::radians(-180.0f), math::radians(-100.0f));
-		}
-	}
-
-	constrained_roll = math::constrain(constrained_roll, -fabsf(ctl_data.roll_setpoint), fabsf(ctl_data.roll_setpoint));
-
-
-	if (!inverted) {
-		/* Calculate desired yaw rate from coordinated turn constraint / (no side forces) */
-		_rate_setpoint = tanf(constrained_roll) * cosf(ctl_data.pitch) * CONSTANTS_ONE_G / (ctl_data.airspeed <
-				 ctl_data.airspeed_min ? ctl_data.airspeed_min : ctl_data.airspeed);
-	}
-
-	if (!PX4_ISFINITE(_rate_setpoint)) {
-		PX4_WARN("yaw rate sepoint not finite");
-		_rate_setpoint = 0.0f;
-	}
 
 	return _rate_setpoint;
 }

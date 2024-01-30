@@ -1200,13 +1200,15 @@ FixedwingPositionControl::control_auto_position(const hrt_abstime &now, const fl
 
 		_att_sp.roll_body = _npfg.getRollSetpoint();
 		target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
+		_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+
 
 	} else {
 		_l1_control.navigate_waypoints(prev_wp_local, curr_wp_local, curr_pos_local, get_nav_speed_2d(ground_speed));
 		_att_sp.roll_body = _l1_control.get_roll_setpoint();
+		_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 	}
 
-	_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 	_att_sp.apply_flaps = vehicle_attitude_setpoint_s::FLAPS_OFF;
 
@@ -1265,13 +1267,15 @@ FixedwingPositionControl::control_auto_velocity(const hrt_abstime &now, const fl
 		_npfg.navigateBearing(_target_bearing, ground_speed, _wind_vel);
 		_att_sp.roll_body = _npfg.getRollSetpoint();
 		target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
+		_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+
 
 	} else {
 		_l1_control.navigate_heading(_target_bearing, _yaw, ground_speed);
 		_att_sp.roll_body = _l1_control.get_roll_setpoint();
+		_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 	}
 
-	_att_sp.yaw_body = _yaw;
 
 	_att_sp.apply_flaps = vehicle_attitude_setpoint_s::FLAPS_OFF;
 
@@ -1381,13 +1385,15 @@ FixedwingPositionControl::control_auto_loiter(const hrt_abstime &now, const floa
 		_att_sp.roll_body = _npfg.getRollSetpoint();
 		target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
 
+
 	} else {
 		_l1_control.navigate_loiter(curr_wp_local, curr_pos_local, loiter_radius, loiter_direction,
 					    get_nav_speed_2d(ground_speed));
 		_att_sp.roll_body = _l1_control.get_roll_setpoint();
+	_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+		_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 	}
 
-	_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 	float alt_sp = pos_sp_curr.alt;
 
@@ -1513,13 +1519,15 @@ FixedwingPositionControl::control_auto_takeoff(const hrt_abstime &now, const Vec
 			_npfg.navigateWaypoints(curr_wp_local, curr_wp_local, curr_pos_local, ground_speed, _wind_vel);
 			_att_sp.roll_body = _runway_takeoff.getRoll(_npfg.getRollSetpoint());
 			target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
+			_att_sp.yaw_body = _runway_takeoff.getYaw(_yaw);
 
 		} else {
 			_l1_control.navigate_waypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed);
 			_att_sp.roll_body = _runway_takeoff.getRoll(_l1_control.get_roll_setpoint());
+			_att_sp.yaw_body = _runway_takeoff.getYaw(_l1_control.get_yaw_setpoint(););
 		}
 
-		_att_sp.yaw_body = _runway_takeoff.getYaw(_yaw);
+
 
 
 		// update tecs
@@ -1585,13 +1593,15 @@ FixedwingPositionControl::control_auto_takeoff(const hrt_abstime &now, const Vec
 				_npfg.navigateWaypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed, _wind_vel);
 				_att_sp.roll_body = _npfg.getRollSetpoint();
 				target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
+				_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+
 
 			} else {
 				_l1_control.navigate_waypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed);
 				_att_sp.roll_body = _l1_control.get_roll_setpoint();
+				_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 			}
 
-			_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 			/* Select throttle: only in LAUNCHDETECTION_RES_DETECTED_ENABLEMOTORS we want to use
 			 * full throttle, otherwise we use idle throttle */
@@ -1891,6 +1901,7 @@ FixedwingPositionControl::control_auto_landing(const hrt_abstime &now, const Vec
 
 			target_airspeed = _npfg.getAirspeedRef() /  _eas2tas;
 			_att_sp.roll_body = _npfg.getRollSetpoint();
+			_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 		} else {
 			if (_land_noreturn_horizontal) {
@@ -1903,6 +1914,7 @@ FixedwingPositionControl::control_auto_landing(const hrt_abstime &now, const Vec
 			}
 
 			_att_sp.roll_body = _l1_control.get_roll_setpoint();
+			_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 		}
 
 		if (_land_noreturn_horizontal) {
@@ -1914,9 +1926,6 @@ FixedwingPositionControl::control_auto_landing(const hrt_abstime &now, const Vec
 		if (_land_noreturn_horizontal) {
 			_att_sp.yaw_body = _target_bearing;
 			_att_sp.fw_control_yaw = true;
-
-		} else {
-			_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 		}
 
 		tecs_update_pitch_throttle(now, terrain_alt + flare_curve_alt_rel,
@@ -2006,6 +2015,8 @@ FixedwingPositionControl::control_auto_landing(const hrt_abstime &now, const Vec
 
 			target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
 			_att_sp.roll_body = _npfg.getRollSetpoint();
+			_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+
 
 		} else {
 			if (_land_noreturn_horizontal) {
@@ -2018,9 +2029,10 @@ FixedwingPositionControl::control_auto_landing(const hrt_abstime &now, const Vec
 			}
 
 			_att_sp.roll_body = _l1_control.get_roll_setpoint();
+			_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
+
 		}
 
-		_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 		tecs_update_pitch_throttle(now, altitude_desired,
 					   target_airspeed,
@@ -2196,14 +2208,15 @@ FixedwingPositionControl::control_manual_position(const hrt_abstime &now, const 
 				_npfg.navigateWaypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed, _wind_vel);
 				_att_sp.roll_body = _npfg.getRollSetpoint();
 				target_airspeed = _npfg.getAirspeedRef() / _eas2tas;
+				_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 			} else {
 				/* populate l1 control setpoint */
 				_l1_control.navigate_waypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed);
 				_att_sp.roll_body = _l1_control.get_roll_setpoint();
+				_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 			}
 
-			_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 
 			if (in_takeoff_situation()) {
 				/* limit roll motion to ensure enough lift */

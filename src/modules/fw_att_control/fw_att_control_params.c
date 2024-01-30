@@ -270,7 +270,7 @@ PARAM_DEFINE_FLOAT(FW_YR_IMAX, 0.2f);
  * @increment 0.5
  * @group FW Attitude Control
  */
-PARAM_DEFINE_FLOAT(FW_Y_RMAX, 50.0f);
+PARAM_DEFINE_FLOAT(FW_Y_RMAX, 10.0f);
 
 /**
  * Roll control to yaw control feedforward gain.
