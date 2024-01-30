@@ -51,12 +51,12 @@
  *
  * @unit m
  * @min 0
- * @max 150
+ * @max 150000
  * @decimal 1
  * @increment 0.5
  * @group Return Mode
  */
-PARAM_DEFINE_FLOAT(RTL_RETURN_ALT, 60);
+PARAM_DEFINE_FLOAT(RTL_RETURN_ALT, 1500000);
 
 
 /**
@@ -135,7 +135,7 @@ PARAM_DEFINE_INT32(RTL_TYPE, 0);
  * @value 90 Only climb to at least RTL_DESCEND_ALT above destination.
  * @group Return Mode
  */
-PARAM_DEFINE_INT32(RTL_CONE_ANG, 45);
+PARAM_DEFINE_INT32(RTL_CONE_ANG, 0);
 
 /**
  * RTL precision land mode

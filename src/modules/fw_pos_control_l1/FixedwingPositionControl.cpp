@@ -1390,7 +1390,7 @@ FixedwingPositionControl::control_auto_loiter(const hrt_abstime &now, const floa
 		_l1_control.navigate_loiter(curr_wp_local, curr_pos_local, loiter_radius, loiter_direction,
 					    get_nav_speed_2d(ground_speed));
 		_att_sp.roll_body = _l1_control.get_roll_setpoint();
-	_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
+		_att_sp.yaw_body = _yaw; // yaw is not controlled, so set setpoint to current yaw
 		_att_sp.yaw_body = _l1_control.get_yaw_setpoint();
 	}
 
