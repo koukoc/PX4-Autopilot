@@ -1524,7 +1524,7 @@ FixedwingPositionControl::control_auto_takeoff(const hrt_abstime &now, const Vec
 		} else {
 			_l1_control.navigate_waypoints(prev_wp_local, curr_wp_local, curr_pos_local, ground_speed);
 			_att_sp.roll_body = _runway_takeoff.getRoll(_l1_control.get_roll_setpoint());
-			_att_sp.yaw_body = _runway_takeoff.getYaw(_l1_control.get_yaw_setpoint(););
+			_att_sp.yaw_body = _runway_takeoff.getYaw(_l1_control.get_yaw_setpoint());
 		}
 
 

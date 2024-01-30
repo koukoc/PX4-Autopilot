@@ -69,13 +69,14 @@ void ECL_L1_Pos_Controller::update_roll_setpoint()
 void ECL_L1_Pos_Controller::update_yaw_setpoint()
 {
 	float yaw_new = atanf(_lateral_accel * 1.0f / CONSTANTS_ONE_G);
-	yaw_new = math::constrain(yaw_new, 0, _yaw_lim_rad);
+	yaw_new = math::constrain(yaw_new, 0.0f, math::radians(360.0f));
 
 	if (_dt > 0.0f && _roll_slew_rate > 0.0f) {
 		// slew rate limiting active
 		yaw_new = math::constrain(yaw_new, _yaw_setpoint - _roll_slew_rate * _dt, _yaw_setpoint + _roll_slew_rate * _dt);
 	}
-
+	float roll_new = atanf(_lateral_accel * 1.0f / CONSTANTS_ONE_G);
+	roll_new = math::constrain(roll_new, -_roll_lim_rad, _roll_lim_rad);
 	if (PX4_ISFINITE(roll_new)) {
 		_yaw_setpoint = yaw_new;
 	}
