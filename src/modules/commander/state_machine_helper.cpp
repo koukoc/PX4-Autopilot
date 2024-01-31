@@ -254,10 +254,10 @@ static void enable_failsafe(vehicle_status_s &status, bool old_failsafe, orb_adv
 {
 	if (!old_failsafe && status.arming_state == vehicle_status_s::ARMING_STATE_ARMED) {
 		// make sure intermittent failsafes don't lead to infinite delay by not constantly reseting the timestamp
-		if (status.failsafe_timestamp == 0 ||
-		    hrt_elapsed_time(&status.failsafe_timestamp) > 30_s) {
-			status.failsafe_timestamp = hrt_absolute_time();
-		}
+		// if (status.failsafe_timestamp == 0 ||
+		//     hrt_elapsed_time(&status.failsafe_timestamp) > 30_s) {
+		// 	status.failsafe_timestamp = hrt_absolute_time();
+		// }
 
 		const char *reason = "";
 
