@@ -56,7 +56,7 @@
  * @increment 0.5
  * @group Return Mode
  */
-PARAM_DEFINE_FLOAT(RTL_RETURN_ALT, 1500000);
+PARAM_DEFINE_FLOAT(RTL_RETURN_ALT, 150000);
 
 
 /**
