@@ -614,12 +614,12 @@ PARAM_DEFINE_FLOAT(FW_AIRSPD_MAX, 20.0f);
  *
  * @unit m/s
  * @min 0.5
- * @max 40
+ * @max 500
  * @decimal 1
  * @increment 0.5
  * @group FW TECS
  */
-PARAM_DEFINE_FLOAT(FW_AIRSPD_TRIM, 15.0f);
+PARAM_DEFINE_FLOAT(FW_AIRSPD_TRIM, 300.0f);
 
 /**
  * Stall Airspeed (CAS)
