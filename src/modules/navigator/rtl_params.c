@@ -67,7 +67,7 @@ PARAM_DEFINE_FLOAT(RTL_RETURN_ALT, 150000);
  *
  * @unit m
  * @min 2
- * @max 100
+ * @max 100000
  * @decimal 1
  * @increment 0.5
  * @group Return Mode

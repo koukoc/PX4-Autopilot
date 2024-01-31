@@ -53,7 +53,7 @@ float ECL_RollController::control_attitude(const float dt, const ECL_ControlData
 	}
 
 	/* Calculate the error */
-	float roll_error = ctl_data.roll_setpoint - ctl_data.roll;
+	float roll_error = 0 - ctl_data.roll;
 
 	/*  Apply P controller: rate setpoint from current error and time constant */
 	_rate_setpoint = roll_error / _tc;
